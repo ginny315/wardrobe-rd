@@ -1,10 +1,9 @@
 const { Sequelize, DataTypes } = require("sequelize");
+const list = require('./envList') ;
+console.log(list)
 
 // 从环境变量中读取数据库配置
-// const { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_ADDRESS = "" } = process.env;
-const MYSQL_USERNAME = "root"
-const MYSQL_PASSWORD = "qDEDJGA6"
-const MYSQL_ADDRESS = "sh-cynosdbmysql-grp-d26a3biu.sql.tencentcdb.com:28035"
+const { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_ADDRESS = "" } = list;
 
 const [host, port] = MYSQL_ADDRESS.split(":");
 
