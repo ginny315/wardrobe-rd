@@ -5,7 +5,7 @@ const bodyParser = require("koa-bodyparser");
 const fs = require("fs");
 const path = require("path");
 const { init: initDB, Clothes } = require("./db");
-const cloud = require('wx-server-sdk');
+// const cloud = require('wx-server-sdk');
 const router = new Router();
 const cors = require('koa2-cors');
 
@@ -16,25 +16,14 @@ router.get("/", async (ctx) => {
   ctx.body = homePage;
 });
 
-// 更新计数
-// router.post("/api/count", async (ctx) => {
-//   const { request } = ctx;
-//   const { action } = request.body;
-//   if (action === "inc") {
-//     await Counter.create();
-//   } else if (action === "clear") {
-//     await Counter.destroy({
-//       truncate: true,
-//     });
-//   }
+// 小程序调用，获取微信 Open ID
+router.get("/api/wx_openid", async (ctx) => {
+  if (ctx.request.headers["x-wx-source"]) {
+    ctx.body = ctx.request.headers["x-wx-openid"];
+  }
+});
 
-//   ctx.body = {
-//     code: 0,
-//     data: await Counter.count(),
-//   };
-// });
-
-// 获取计数
+// 获取
 router.get("/api/get_clothes", async (ctx) => {
   const result = await Clothes.findAll({});
 
@@ -44,17 +33,10 @@ router.get("/api/get_clothes", async (ctx) => {
   };
 });
 
-// 小程序调用，获取微信 Open ID
-router.get("/api/wx_openid", async (ctx) => {
-  if (ctx.request.headers["x-wx-source"]) {
-    ctx.body = ctx.request.headers["x-wx-openid"];
-  }
-});
-
+// 新增
 router.post("/api/add_clothes", async (ctx) => {
-  console.log(111)
   const { body } = ctx.request;
-  console.log('upload body=', body,)
+  console.log('add body=', body,)
   const item = {
     season: body.season[0],
     type: body.type[0],
@@ -63,8 +45,6 @@ router.post("/api/add_clothes", async (ctx) => {
     imgurl: body.imgurl
   }
   const result = await Clothes.create(item);
-  
-  
   ctx.body = {
     code: 0,
     data: result,
@@ -72,7 +52,21 @@ router.post("/api/add_clothes", async (ctx) => {
   ctx.status = 201;
 });
 
-
+// 删除
+router.delete("/api/del_clothes/:id", async (ctx) => {
+  // const { body } = ctx.request;
+  const id = Number(ctx.params.id);
+  console.log('del=', id)
+  const result = await Clothes.destroy({
+    where: {id:id}
+  })
+  console.log('88',result)
+  ctx.body = {
+    code: 0,
+    data: 'del success',
+  };
+  ctx.status = 201;
+});
 
 
 const app = new Koa();
@@ -91,5 +85,3 @@ async function bootstrap() {
   });
 }
 bootstrap();
-
-cloud.init();

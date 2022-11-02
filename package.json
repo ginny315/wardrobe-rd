@@ -1,7 +1,7 @@
 {
   "name": "wxcloudrun-koa",
   "version": "1.0.0",
-  "description": "微信云托管 koa 框架模板",
+  "description": "使用微信云托管",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

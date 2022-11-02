@@ -1,6 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const list = require('./envList') ;
-console.log(list)
 
 // 从环境变量中读取数据库配置
 const { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_ADDRESS = "" } = list;
@@ -23,18 +22,22 @@ const Clothes = sequelize.define("cloth", {
   },
   season: {
     type: DataTypes.STRING,
+    allowNull: false
   },
   type: {
     type: DataTypes.STRING,
+    allowNull: false
   },
   position: {
     type: DataTypes.STRING,
+    allowNull: false
   },
   other: {
     type: DataTypes.STRING,
   },
   imgurl: {
     type: DataTypes.STRING,
+    allowNull: false
   },
 });
 
